@@ -70,5 +70,5 @@ mongoose
         console.log(`Connected to database on port ${port}`);
     })
     .catch(err => {
-        console.log({ message: "Oops, something went wrong", err });
+        console.log(err);
     });
