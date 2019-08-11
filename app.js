@@ -43,8 +43,18 @@ app.use(
     })
 );
 
+const port = process.env.PORT || 5000;
+
+// Serve static assets in production
+if (process.env.NODE_ENV === "production") {
+    // Set static folder
+    app.use(express.static("client/build"));
+    app.get("*", (req, res) => {
+        res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+    });
+}
+
 // Mongodb Atlas connection
-// "mongodb+srv://<username>:<password>@graphql-event-app-n2w8v.mongodb.net/test?retryWrites=true&w=majority"
 mongoose
     .connect(
         `mongodb+srv://${process.env.MONGO_USER}:${
@@ -55,8 +65,8 @@ mongoose
         { useNewUrlParser: true }
     )
     .then(() => {
-        app.listen(8000);
-        console.log("Connected to database!");
+        app.listen(port);
+        console.log(`Connected to database on port ${port}`);
     })
     .catch(err => {
         console.log({ message: "Oops, something went wrong", err });
