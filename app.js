@@ -45,15 +45,6 @@ app.use(
 
 const port = process.env.PORT || 5000;
 
-// Serve static assets in production
-if (process.env.NODE_ENV === "production") {
-    // Set static folder
-    app.use(express.static("client/build"));
-    app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
-    });
-}
-
 // Mongodb Atlas connection
 mongoose
     .connect(
@@ -65,6 +56,16 @@ mongoose
         { useNewUrlParser: true }
     )
     .then(() => {
+        // Serve static assets in production
+        if (process.env.NODE_ENV === "production") {
+            // Set static folder
+            app.use(express.static("client/build"));
+            app.get("*", (req, res) => {
+                res.sendFile(
+                    path.resolve(__dirname, "client", "build", "index.html")
+                );
+            });
+        }
         app.listen(port);
         console.log(`Connected to database on port ${port}`);
     })
